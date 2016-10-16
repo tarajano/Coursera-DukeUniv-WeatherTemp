@@ -49,13 +49,17 @@ public class GetMaxTemperature {
 		CSVRecord max_temp_record = getMaxTempInFile(file_parser);
 		System.out.println(max_temp_record.get("TimeEST")+" "+max_temp_record.get("TemperatureF"));	
 	}
-	
+	public static void testGetMaxTempMultipleFiles() {
+		CSVRecord max_temp_record = getMaxTempInMultipleFiles();
+		System.out.println(max_temp_record.get("DateUTC")+" -- "+max_temp_record.get("TemperatureF"));
+	}	
 	public static void main(String[] args) {
-		//Single File
-		testGetMaxTempSingleFile();
-		//Multiple files
-		//CSVRecord max_temp_record = getMaxTempInMultipleFiles();
-		//System.out.println(max_temp_record.get("DateUTC")+" -- "+max_temp_record.get("TemperatureF"));
+		// Get Max Temperature from Singles File
+		//testGetMaxTempSingleFile();
+		
+		// Get Max Temperature from Multiple Files
+		testGetMaxTempMultipleFiles();
+
 	}
 
 }
