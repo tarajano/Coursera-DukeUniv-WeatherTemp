@@ -43,16 +43,19 @@ public class GetMaxTemperature {
 		}
 		return max_temp_record;
 	}
-	public static void main(String[] args) {
-		/*//Single File
+	public static void testGetMaxTempSingleFile() {
 		FileResource input_file = new FileResource("nc_weather/2015/weather-2015-01-01.csv");
 		CSVParser file_parser = input_file.getCSVParser();
 		CSVRecord max_temp_record = getMaxTempInFile(file_parser);
-		System.out.println(max_temp_record.get("TimeEST")+" "+max_temp_record.get("TemperatureF"));
-		*/
+		System.out.println(max_temp_record.get("TimeEST")+" "+max_temp_record.get("TemperatureF"));	
+	}
+	
+	public static void main(String[] args) {
+		//Single File
+		testGetMaxTempSingleFile();
 		//Multiple files
-		CSVRecord max_temp_record = getMaxTempInMultipleFiles();
-		System.out.println(max_temp_record.get("DateUTC")+" -- "+max_temp_record.get("TemperatureF"));
+		//CSVRecord max_temp_record = getMaxTempInMultipleFiles();
+		//System.out.println(max_temp_record.get("DateUTC")+" -- "+max_temp_record.get("TemperatureF"));
 	}
 
 }
