@@ -8,6 +8,31 @@ public class GetMaxTemperature {
 	/**
 	 * @param args
 	 */
+	public static void fileWithColdestTemperature(){
+		
+	}
+	public static CSVRecord getLowestOfTwoTemps(CSVRecord min_temp_record, CSVRecord record) {
+		double minTemp = Double.parseDouble(min_temp_record.get("TemperatureF"));
+		double recordTemp = Double.parseDouble(record.get("TemperatureF"));
+		if(recordTemp == -9999){
+			return min_temp_record;
+		}
+		if(recordTemp < minTemp){
+			min_temp_record = record;
+		}
+		return min_temp_record;
+	}
+	public static CSVRecord getMinTempInFile(CSVParser parser) {
+		CSVRecord min_temp_record = null;
+		for(CSVRecord record : parser){
+			if(min_temp_record == null){
+				min_temp_record = record;
+			}else{
+				min_temp_record = getLowestOfTwoTemps(min_temp_record, record);
+			}
+		}
+		return min_temp_record;
+	}
 	public static CSVRecord getMaxTempInMultipleFiles() {
 		CSVRecord max_temp_record = null;
 		CSVRecord record = null;
@@ -43,6 +68,7 @@ public class GetMaxTemperature {
 		}
 		return max_temp_record;
 	}
+	//Tester Methods
 	public static void testGetMaxTempSingleFile() {
 		FileResource input_file = new FileResource("nc_weather/2015/weather-2015-01-01.csv");
 		CSVParser file_parser = input_file.getCSVParser();
@@ -52,13 +78,23 @@ public class GetMaxTemperature {
 	public static void testGetMaxTempMultipleFiles() {
 		CSVRecord max_temp_record = getMaxTempInMultipleFiles();
 		System.out.println(max_temp_record.get("DateUTC")+" -- "+max_temp_record.get("TemperatureF"));
-	}	
+	}
+	public static void testGetMinTempSingleFile() {
+		FileResource input_file = new FileResource("nc_weather/2015/weather-2015-02-05.csv");
+		CSVParser file_parser = input_file.getCSVParser();
+		CSVRecord min_temp_record = getMinTempInFile(file_parser);
+		System.out.println(min_temp_record.get("TimeEST")+" "+min_temp_record.get("TemperatureF"));	
+	}
+	//Main
 	public static void main(String[] args) {
 		// Get Max Temperature from Singles File
 		//testGetMaxTempSingleFile();
 		
+		// Get Min Temperature from Singles File
+		//testGetMinTempSingleFile();
+		
 		// Get Max Temperature from Multiple Files
-		testGetMaxTempMultipleFiles();
+		//testGetMaxTempMultipleFiles();
 
 	}
 
