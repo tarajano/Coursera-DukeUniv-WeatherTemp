@@ -14,7 +14,7 @@ public class GetMaxTemperature {
 	public static CSVRecord getLowestOfTwoTemps(CSVRecord min_temp_record, CSVRecord record) {
 		double minTemp = Double.parseDouble(min_temp_record.get("TemperatureF"));
 		double recordTemp = Double.parseDouble(record.get("TemperatureF"));
-		if(recordTemp == -9999){
+		if(recordTemp < -999){
 			return min_temp_record;
 		}
 		if(recordTemp < minTemp){
@@ -83,14 +83,14 @@ public class GetMaxTemperature {
 		FileResource input_file = new FileResource("nc_weather/2015/weather-2015-02-05.csv");
 		CSVParser file_parser = input_file.getCSVParser();
 		CSVRecord min_temp_record = getMinTempInFile(file_parser);
-		System.out.println(min_temp_record.get("TimeEST")+" "+min_temp_record.get("TemperatureF"));	
+		System.out.println(min_temp_record.get("TimeEST")+" "+min_temp_record.get("TemperatureF"));
 	}
 	//Main
 	public static void main(String[] args) {
 		// Get Max Temperature from Singles File
 		//testGetMaxTempSingleFile();
 		
-		// Get Min Temperature from Singles File
+		// Get Min Temperature from Single File
 		//testGetMinTempSingleFile();
 		
 		// Get Max Temperature from Multiple Files
