@@ -8,8 +8,21 @@ public class GetMaxTemperature {
 	/**
 	 * @param args
 	 */
-	public static void fileWithColdestTemperature(){
-		
+	public static String fileWithColdestTemperature(){
+		double current_lowest_temp = 99999;
+		DirectoryResource dr = new DirectoryResource();
+		String coldest_file = "";
+		for (File current_file : dr.selectedFiles()) {
+			FileResource input_file = new FileResource(current_file);
+			CSVParser parser = input_file.getCSVParser();
+			CSVRecord record = getMinTempInFile(parser);
+			double current_temp = Double.parseDouble(record.get("TemperatureF"));
+			if(current_temp < current_lowest_temp){
+				coldest_file = current_file.getName();
+				current_lowest_temp = current_temp;				
+			}
+		}
+		return coldest_file;
 	}
 	public static CSVRecord getLowestOfTwoTemps(CSVRecord min_temp_record, CSVRecord record) {
 		double minTemp = Double.parseDouble(min_temp_record.get("TemperatureF"));
@@ -85,7 +98,9 @@ public class GetMaxTemperature {
 		CSVRecord min_temp_record = getMinTempInFile(file_parser);
 		System.out.println(min_temp_record.get("TimeEST")+" "+min_temp_record.get("TemperatureF"));
 	}
-	//Main
+	public static void testFileWithColdestTemperature() {
+		System.out.println("File with coldest temperature: "+fileWithColdestTemperature());
+	}	//Main
 	public static void main(String[] args) {
 		// Get Max Temperature from Singles File
 		//testGetMaxTempSingleFile();
@@ -95,7 +110,9 @@ public class GetMaxTemperature {
 		
 		// Get Max Temperature from Multiple Files
 		//testGetMaxTempMultipleFiles();
-
+		
+		// Retrieving name of the file with the lowest temperature
+		//testFileWithColdestTemperature();
 	}
 
 }
