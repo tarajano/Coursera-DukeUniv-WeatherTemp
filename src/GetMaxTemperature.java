@@ -38,13 +38,13 @@ public class GetMaxTemperature {
 		return min_humidity_record;
 	}
 	public static CSVRecord getLowestOfTwoRecords(CSVRecord min_attribute_record, CSVRecord record, String attribute) {
-		if("N/A" == min_attribute_record.get(attribute) && "N/A" == record.get(attribute)){
+		if(min_attribute_record.get(attribute).equalsIgnoreCase("N/A") && record.get(attribute).equalsIgnoreCase("N/A")){
 			return min_attribute_record;
-		}else if("N/A" == min_attribute_record.get(attribute)){
+		}else if(min_attribute_record.get(attribute).equalsIgnoreCase("N/A")){
 			return record;
-		}else if("N/A" == record.get(attribute)){
+		}else if(record.get(attribute).equalsIgnoreCase("N/A")){
 			return min_attribute_record;
-		}
+		}	
 		double min_attribute = Double.parseDouble(min_attribute_record.get(attribute));
 		double record_attribute = Double.parseDouble(record.get(attribute));
 		if(record_attribute < -999){
