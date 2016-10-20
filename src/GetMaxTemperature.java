@@ -8,6 +8,35 @@ public class GetMaxTemperature {
 	/**
 	 * @param args
 	 */
+	public static CSVRecord getLowestHumidityInFile(CSVParser parser) {
+		CSVRecord min_humidity_record = null;
+		for(CSVRecord record : parser){
+			if(min_humidity_record == null){
+				min_humidity_record = record;
+			}else{
+				min_humidity_record = getLowestOfTwoRecords(min_humidity_record, record, "Humidity");
+			}
+		}
+		return min_humidity_record;
+	}
+	public static CSVRecord getLowestOfTwoRecords(CSVRecord min_attribute_record, CSVRecord record, String attribute) {
+		if("N/A" == min_attribute_record.get(attribute) && "N/A" == record.get(attribute)){
+			return min_attribute_record;
+		}else if("N/A" == min_attribute_record.get(attribute)){
+			return record;
+		}else if("N/A" == record.get(attribute)){
+			return min_attribute_record;
+		}
+		double min_attribute = Double.parseDouble(min_attribute_record.get(attribute));
+		double record_attribute = Double.parseDouble(record.get(attribute));
+		if(record_attribute < -999){
+			return min_attribute_record;
+		}
+		if(record_attribute < min_attribute){
+			min_attribute_record = record;
+		}
+		return min_attribute_record;
+	}
 	public static String fileWithColdestTemperature(){
 		double current_lowest_temp = 99999;
 		DirectoryResource dr = new DirectoryResource();
@@ -100,7 +129,16 @@ public class GetMaxTemperature {
 	}
 	public static void testFileWithColdestTemperature() {
 		System.out.println("File with coldest temperature: "+fileWithColdestTemperature());
-	}	//Main
+	}
+	public static void testGetLowestHumidityInFile() {
+		//here
+		FileResource fr = new FileResource();
+		CSVParser parser = fr.getCSVParser();
+		CSVRecord csv = getLowestHumidityInFile(parser);
+		System.out.println("Lowest Humidity was: "+csv.get("Humidity")+" at "+csv.get("DateUTC"));
+	}
+	
+	//Main
 	public static void main(String[] args) {
 		// Get Max Temperature from Singles File
 		//testGetMaxTempSingleFile();
@@ -113,6 +151,11 @@ public class GetMaxTemperature {
 		
 		// Retrieving name of the file with the lowest temperature
 		//testFileWithColdestTemperature();
+		
+		// Retrieving lowest Temperature from Single File
+		testGetLowestHumidityInFile();
+		
+		
 	}
 
 }
