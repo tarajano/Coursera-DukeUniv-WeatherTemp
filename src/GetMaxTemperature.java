@@ -8,6 +8,24 @@ public class GetMaxTemperature {
 	/**
 	 * @param args
 	 */
+	
+	public static CSVRecord getMinHumidityInMultipleFiles() {
+		//Here
+		CSVRecord min_humidity_record = null;
+		CSVRecord record = null;
+		DirectoryResource dr = new DirectoryResource();
+		for (File file : dr.selectedFiles()){
+			FileResource input_file = new FileResource(file);
+			CSVParser file_parser = input_file.getCSVParser();
+			record = getLowestHumidityInFile(file_parser);
+			if(min_humidity_record == null){
+				min_humidity_record = record;
+			}else{
+				min_humidity_record = getLowestOfTwoRecords(min_humidity_record, record, "Humidity"); //here
+			}
+		}
+		return min_humidity_record;
+	}
 	public static CSVRecord getLowestHumidityInFile(CSVParser parser) {
 		CSVRecord min_humidity_record = null;
 		for(CSVRecord record : parser){
@@ -131,12 +149,17 @@ public class GetMaxTemperature {
 		System.out.println("File with coldest temperature: "+fileWithColdestTemperature());
 	}
 	public static void testGetLowestHumidityInFile() {
-		//here
 		FileResource fr = new FileResource();
 		CSVParser parser = fr.getCSVParser();
 		CSVRecord csv = getLowestHumidityInFile(parser);
 		System.out.println("Lowest Humidity was: "+csv.get("Humidity")+" at "+csv.get("DateUTC"));
 	}
+	public static void testGetMinHumidityInMultipleFiles() {
+		CSVRecord record = getMinHumidityInMultipleFiles();
+		System.out.println("Lowest Humidity was: "+record.get("Humidity")+" at "+record.get("DateUTC"));
+	}	
+	
+	
 	
 	//Main
 	public static void main(String[] args) {
@@ -152,9 +175,11 @@ public class GetMaxTemperature {
 		// Retrieving name of the file with the lowest temperature
 		//testFileWithColdestTemperature();
 		
-		// Retrieving lowest Temperature from Single File
-		testGetLowestHumidityInFile();
+		// Retrieving lowest Humidity from Single File
+		//testGetLowestHumidityInFile();
 		
+		// Get Min Humidity from Multiple Files
+		testGetMinHumidityInMultipleFiles();
 		
 	}
 
