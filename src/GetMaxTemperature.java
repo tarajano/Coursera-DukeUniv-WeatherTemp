@@ -9,6 +9,23 @@ public class GetMaxTemperature {
 	 * @param args
 	 */
 	
+	
+	// check method below
+	public static double averageTemperatureByHumidityInFile(CSVParser parser, double humidity){
+		int count = 0;
+		double summation = 0;
+		for(CSVRecord record : parser){
+			if(Integer.parseInt(record.get("Humidity")) >= humidity){
+				count++;
+				summation = summation + Double.parseDouble(record.get("TemperatureF"));
+			}
+		}
+		if(count > 0){
+			return summation / count;
+		}else{
+			return -1;
+		}
+	}
 	public static CSVRecord getMinHumidityInMultipleFiles() {
 		//Here
 		CSVRecord min_humidity_record = null;
@@ -158,7 +175,19 @@ public class GetMaxTemperature {
 		CSVRecord record = getMinHumidityInMultipleFiles();
 		System.out.println("Lowest Humidity was: "+record.get("Humidity")+" at "+record.get("DateUTC"));
 	}	
-	
+	public static void testAverageTemperatureByHumidityInFile(){
+		// nc_weather/2014/weather-2014-03-20.csv // Negative test
+		// nc_weather/2014/weather-2014-01-20.csv // Positive test
+		FileResource fr = new FileResource("nc_weather/2014/weather-2014-03-20.csv"); 
+		CSVParser parser = fr.getCSVParser();
+		int humidity = 80;
+		double ave_temp = averageTemperatureByHumidityInFile(parser, humidity);
+		if(ave_temp != -1){
+			System.out.println("When Humidity is over " + humidity + ", the average temperature is: " + ave_temp + ".");
+		}else{
+			System.out.println("No temperatures with that humidity.");
+		}
+	}
 	
 	
 	//Main
@@ -179,7 +208,10 @@ public class GetMaxTemperature {
 		//testGetLowestHumidityInFile();
 		
 		// Get Min Humidity from Multiple Files
-		testGetMinHumidityInMultipleFiles();
+		//testGetMinHumidityInMultipleFiles();
+		
+		//  Average temperature for records where humidity >= X value 
+		testAverageTemperatureByHumidityInFile();
 		
 	}
 
