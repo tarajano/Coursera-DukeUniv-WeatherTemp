@@ -8,6 +8,22 @@ public class GetMaxTemperature {
 	/**
 	 * @param args
 	 */
+	public static CSVRecord getMinTempInMultipleFiles() {
+		CSVRecord min_temp_record = null;
+		CSVRecord record = null;
+		DirectoryResource dr = new DirectoryResource();
+		for (File file : dr.selectedFiles()){
+			FileResource input_file = new FileResource(file);
+			CSVParser file_parser = input_file.getCSVParser();
+			record = getMinTempInFile(file_parser);
+			if(min_temp_record == null){
+				min_temp_record = record;
+			}else{
+				min_temp_record = getLowestOfTwoRecords(min_temp_record, record,"TemperatureF");
+			}
+		}
+		return min_temp_record;
+	}
 	public static double averageTemperatureByHumidityInFile(CSVParser parser, double humidity){
 		int count = 0;
 		double summation = 0;
@@ -153,10 +169,10 @@ public class GetMaxTemperature {
 		System.out.println(max_temp_record.get("DateUTC")+" -- "+max_temp_record.get("TemperatureF"));
 	}
 	public static void testGetMinTempSingleFile() {
-		FileResource input_file = new FileResource("nc_weather/2015/weather-2015-02-05.csv");
+		FileResource input_file = new FileResource("nc_weather/2014/weather-2014-05-01.csv");
 		CSVParser file_parser = input_file.getCSVParser();
 		CSVRecord min_temp_record = getMinTempInFile(file_parser);
-		System.out.println(min_temp_record.get("TimeEST")+" "+min_temp_record.get("TemperatureF"));
+		System.out.println(min_temp_record.get("TimeEDT")+" "+min_temp_record.get("TemperatureF"));
 	}
 	public static void testFileWithColdestTemperature() {
 		System.out.println("File with coldest temperature: "+fileWithColdestTemperature());
@@ -182,10 +198,14 @@ public class GetMaxTemperature {
 			System.out.println("No temperatures with that humidity.");
 		}
 	}
+	public static void testGetMinTempMultipleFiles() {
+		CSVRecord min_temp_record = getMinTempInMultipleFiles();
+		System.out.println(min_temp_record.get("DateUTC")+" -- "+min_temp_record.get("TemperatureF"));
+	}
 	
 	//Main
 	public static void main(String[] args) {
-		// Get Max Temperature from Singles File
+		// Get Max Temperature from Single File
 		//testGetMaxTempSingleFile();
 		
 		// Get Min Temperature from Single File
@@ -205,5 +225,8 @@ public class GetMaxTemperature {
 		
 		//  Average temperature for records where humidity >= X value 
 		//testAverageTemperatureByHumidityInFile();
+		
+		// Get Min Temperature from Multiple Files
+		testGetMinTempMultipleFiles();
 	}
 }
